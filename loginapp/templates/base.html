@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Base html</title>
+</head>
+<body>
+<nav>
+    <ul>
+        <li>
+            <a href="/">HOME</a>
+        </li>
+
+
+        {% if user.is_authenticated %}
+        <li>
+            <a href="/panel_apadrinado">PERFIL (APADRINADO)</a>
+        </li>
+        <li>
+            <a href="/panel_padrino">PERFIL (PADRINO)</a>
+        </li>
+        <li>
+            <a href="/salir">SALIR</a>
+        </li>
+
+        {% else %}
+
+        <li>
+            <a href="/registro">REGISTRO</a>
+        </li>
+         <li>
+            <a href="/ingresar">INGRESAR</a>
+        </li>
+
+        {% endif %}
+
+
+
+    </ul>
+</nav>
+{% block content %}
+{% endblock %}
+</body>
+</html>
