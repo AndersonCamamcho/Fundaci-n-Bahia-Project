@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 
-def home(request):
-    return render (request, 'home.html')
+def Home(request):
+    return render(request, 'home.html')
 
 @csrf_exempt
 def registro(request):
@@ -30,6 +30,7 @@ def registro(request):
                     'form': UserCreationForm,
                     'error': "Usuario ya existe"
                 })
+                print(user)
         return render(request, 'registro.html', {
                     'form': UserCreationForm,
                     'error': "Las contraseñas no coinciden"
@@ -45,10 +46,10 @@ def ingresar (request):
         user = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'ingresar.html'), {
+            return render(request, 'ingresar.html', {
                 'form': AuthenticationForm,
                 'error': 'Usuario invalido'
-            }
+            })
         else:
             login(request, user)
             return redirect('/panel_padrino/')

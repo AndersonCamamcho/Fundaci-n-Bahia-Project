@@ -16,11 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from loginapp.views import registro, home, panel_padrino, panel_apadrinado, salir, ingresar
+from loginapp.views import registro, Home, panel_padrino, panel_apadrinado, salir, ingresar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', home, name='home'),
+    path('', Home, name='home'),
     path('registro/', registro),
     path('panel_padrino/', panel_padrino, name='habla'),
     path('panel_apadrinado/', panel_apadrinado),
