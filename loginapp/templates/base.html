@@ -13,27 +13,31 @@
         <li>
             <a href="/">HOME</a>
         </li>
-
-
-        {% if user.is_authenticated %}
-        <li>
-            <a href="/panel_apadrinado">PERFIL (APADRINADO)</a>
-        </li>
-        <li>
-            <a href="/panel_padrino">PERFIL (PADRINO)</a>
-        </li>
-        <li>
-            <a href="/salir">SALIR</a>
-        </li>
-
-        {% else %}
-
         <li>
             <a href="/registro">REGISTRO</a>
         </li>
          <li>
             <a href="/ingresar">INGRESAR</a>
         </li>
+
+
+        {% if user.is_authenticated %}
+
+            <li>
+                <a href="/salir">SALIR</a>
+            </li>
+
+            {% if user.is_employee %}
+            <li>
+                <a href="/panel_apadrinado">PERFIL (APADRINADO)</a>
+            </li>
+            {% endif %}
+            {% if user.is_benefactor %}
+            <li>
+                <a href="/panel_padrino">PERFIL (PADRINO)</a>
+            </li>
+            {% endif %}
+
 
         {% endif %}
 

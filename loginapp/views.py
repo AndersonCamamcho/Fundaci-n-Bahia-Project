@@ -1,10 +1,11 @@
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
+from user_carpeta.models import CustomUser
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.csrf import csrf_exempt
 
-
+import user_carpeta as UserPorpio
 
 
 def Home(request):
@@ -20,17 +21,19 @@ def registro(request):
     else:
 
         if request.POST['password1'] == request.POST['password2']:
+
             try:
-                user = User.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
+                user = CustomUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
                 user.save()
                 login(request, user)
                 return redirect('/panel_padrino/')
-            except:
+            except IntegrityError as e:
+                print(e)
                 return render(request, 'registro.html', {
                     'form': UserCreationForm,
                     'error': "Usuario ya existe"
                 })
-                print(user)
+
         return render(request, 'registro.html', {
                     'form': UserCreationForm,
                     'error': "Las contraseñas no coinciden"
