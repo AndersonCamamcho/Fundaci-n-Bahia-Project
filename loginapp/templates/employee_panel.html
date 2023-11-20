@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% if user.is_employee %}
+            <li>
+                <a href="/employee_panel">EMPLEADO</a>
+            </li>
+            <h1>Sección del apadrinado</h1>
+    {% endif %}
+{% endblock %}
+
+
+

@@ -4,16 +4,16 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from user_carpeta.models import CustomUser
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.csrf import csrf_exempt
-
-import user_carpeta as UserPorpio
+from .forms import BeneficiaryForm
+from  django.contrib import messages
 
 
 def Home(request):
     return render(request, 'home.html')
 
+
 @csrf_exempt
 def registro(request):
-
     if request.method == 'GET':
         return render(request, 'registro.html', {
             'form': UserCreationForm
@@ -23,7 +23,8 @@ def registro(request):
         if request.POST['password1'] == request.POST['password2']:
 
             try:
-                user = CustomUser.objects.create_user(username=request.POST['username'], password=request.POST['password1'])
+                user = CustomUser.objects.create_user(username=request.POST['username'],
+                                                      password=request.POST['password1'])
                 user.save()
                 login(request, user)
                 return redirect('/panel_padrino/')
@@ -35,12 +36,12 @@ def registro(request):
                 })
 
         return render(request, 'registro.html', {
-                    'form': UserCreationForm,
-                    'error': "Las contraseñas no coinciden"
+            'form': UserCreationForm,
+            'error': "Las contraseñas no coinciden"
         })
 
 
-def ingresar (request):
+def ingresar(request):
     if request.method == 'GET':
         return render(request, 'ingresar.html', {
             'form': AuthenticationForm
@@ -58,16 +59,32 @@ def ingresar (request):
             return redirect('/panel_padrino/')
 
 
-def salir (request):
+def salir(request):
     logout(request)
     return redirect('home')
 
-def panel_padrino (request):
+
+def panel_padrino(request):
     return render(request, 'panel_padrino.html')
 
-def panel_apadrinado (request):
-    return render(request, 'panel_apadrinado.html')
+
+def employee_panel(request):
+    return render(request, 'employee_panel.html')
 
 
+def form_beneficiary(request):
+    if request.method == 'POST':
+        form = BeneficiaryForm(request.POST)
+        if form.is_valid():
+            employee_id = form.save(commit=False)
+            employee_id.responsible = request.user
+            employee_id.save()
+            messages.success(request, 'Registro exitoso')
+            return redirect('/form_beneficiary/')
+
+    else:
+        form = BeneficiaryForm()
 
 
+    return render(request, 'form_beneficiary.html', {
+        'form': form})

@@ -10,6 +10,7 @@
 <body>
 <nav>
     <ul>
+        {% if not user.is_authenticated %}
         <li>
             <a href="/">HOME</a>
         </li>
@@ -19,23 +20,31 @@
          <li>
             <a href="/ingresar">INGRESAR</a>
         </li>
+        {% endif %}
 
 
         {% if user.is_authenticated %}
+
+            <li>
+            <a href="/">HOME</a>
+            </li>
 
             <li>
                 <a href="/salir">SALIR</a>
             </li>
 
             {% if user.is_employee %}
-            <li>
-                <a href="/panel_apadrinado">PERFIL (APADRINADO)</a>
-            </li>
+                <li>
+                    <a href="/employee_panel">EMPLEADO</a>
+                </li>
+                <li>
+                    <a href="/form_beneficiary">REGISTRAR BENEFICIARIO</a>
+                </li>
             {% endif %}
             {% if user.is_benefactor %}
-            <li>
-                <a href="/panel_padrino">PERFIL (PADRINO)</a>
-            </li>
+                <li>
+                    <a href="/panel_padrino">BENEFACTOR</a>
+                </li>
             {% endif %}
 
 
