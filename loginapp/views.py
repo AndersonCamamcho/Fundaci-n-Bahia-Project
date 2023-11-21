@@ -69,10 +69,7 @@ def panel_padrino(request):
 
 
 def employee_panel(request):
-    return render(request, 'employee_panel.html')
 
-
-def form_beneficiary(request):
     if request.method == 'POST':
         form = BeneficiaryForm(request.POST)
         if form.is_valid():
@@ -80,11 +77,16 @@ def form_beneficiary(request):
             employee_id.responsible = request.user
             employee_id.save()
             messages.success(request, 'Registro exitoso')
-            return redirect('/form_beneficiary/')
+            return redirect('/employee_panel/')
 
     else:
         form = BeneficiaryForm()
 
-
-    return render(request, 'form_beneficiary.html', {
+    return render(request, 'employee_panel.html', {
         'form': form})
+
+    return render(request, 'employee_panel.html')
+
+
+
+

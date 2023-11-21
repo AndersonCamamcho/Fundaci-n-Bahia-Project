@@ -1,13 +1,55 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    {% if user.is_employee %}
-            <li>
-                <a href="/employee_panel">EMPLEADO</a>
-            </li>
-            <h1>Sección del apadrinado</h1>
+  {% if user.is_employee %}
+    <h1>Vista del empleado</h1>
+    <div id="Botones" >
+      <button id="Regresar" onclick="regresar()" style="display: none;" > REGRESAR </button>
+      <button id="VerRegistros"  onclick="ver();"> Ver registros </button>
+      <button id="CrearRegistro" onclick="crear();"> Nuevo registro </button>
+    </div>
+
+
+    <div id="beneficiaryForm" style="display: none;">
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit">Guardar</button>
+      </form>
+    </div>
+
+    <h2 id="Ver" style="display: none;">Bloque para ver registros</h2>
+
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li {% if message.tags %} class="{{ message.tags }}"{% endif %}> {{ message }}</li>
+        {% endfor %}
+      </ul>
     {% endif %}
+
+     <script>
+        function AcomodarBotones(){
+            document.getElementById('CrearRegistro').style.display = 'none';
+            document.getElementById('VerRegistros').style.display = 'none';
+            document.getElementById('Regresar').style.display = 'block';
+        }
+
+       function crear(){
+           AcomodarBotones();
+           document.getElementById('beneficiaryForm').style.display = 'block';
+       }
+
+        function ver(){
+           AcomodarBotones();
+           document.getElementById('Ver').style.display = 'block';
+       }
+       function regresar() {
+           window.location.href = '/employee_panel';
+    }
+
+     </script>
+
+
+  {% endif %}
 {% endblock %}
-
-
-
