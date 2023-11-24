@@ -1,11 +1,13 @@
 from django.db import IntegrityError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from user_carpeta.models import CustomUser
+from .models import Beneficiary
 from django.contrib.auth import login, logout, authenticate
 from django.views.decorators.csrf import csrf_exempt
 from .forms import BeneficiaryForm
-from  django.contrib import messages
+from django.contrib import messages
 
 
 def Home(request):
@@ -56,7 +58,12 @@ def ingresar(request):
             })
         else:
             login(request, user)
-            return redirect('/panel_padrino/')
+            if user.is_employee:
+                return redirect('/employee_panel/')
+            elif user.is_benefactor:
+                return redirect('/benefactor_panel/')
+            else:
+                return redirect('home')
 
 
 def salir(request):
@@ -64,12 +71,13 @@ def salir(request):
     return redirect('home')
 
 
+@login_required
 def panel_padrino(request):
     return render(request, 'panel_padrino.html')
 
 
-def employee_panel(request):
-
+@login_required
+def process_beneficiary_form(request):
     if request.method == 'POST':
         form = BeneficiaryForm(request.POST)
         if form.is_valid():
@@ -85,8 +93,19 @@ def employee_panel(request):
     return render(request, 'employee_panel.html', {
         'form': form})
 
-    return render(request, 'employee_panel.html')
+
+@login_required
+def view_beneficiary_records(request):
+    user_records = Beneficiary.objects.filter(responsible=request.user)
+    return render(request, 'employee_panel.html', {'user_records': user_records})
 
 
+def edit_record(request, id):
+    editRequest = get_object_or_404(Beneficiary, id=id)
+    form = BeneficiaryForm(instance=editRequest)
+    if request.method == 'POST':
+        form = BeneficiaryForm(request.POST, instance=editRequest)
+        if form.is_valid():
+            form.save()
 
-
+    return render(request, 'employee_panel.html', {'recordEdit': editRequest, 'formEdit': form})

@@ -2,14 +2,14 @@
 
 {% block content %}
   {% if user.is_employee %}
-    <h1>Vista del empleado</h1>
-    <div id="Botones" >
+    <h4>Vista del empleado</h4>
+    <div id="Botones"  >
       <button id="Regresar" onclick="regresar()" style="display: none;" > REGRESAR </button>
       <button id="VerRegistros"  onclick="ver();"> Ver registros </button>
       <button id="CrearRegistro" onclick="crear();"> Nuevo registro </button>
     </div>
 
-
+  <!-- Formulario de registros -->
     <div id="beneficiaryForm" style="display: none;">
       <form action="" method="POST">
         {% csrf_token %}
@@ -18,8 +18,50 @@
       </form>
     </div>
 
-    <h2 id="Ver" style="display: none;">Bloque para ver registros</h2>
 
+<!-- Ver tabla de registros -->
+    <div class="table-container">
+      <div id="Ver" style="display: none;">
+      <h2>Bloque para ver registros</h2>
+      {% if user.records.all %}
+        <div>
+
+        </div>
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Apellidos</th>
+              <th>Email</th>
+              <th>Identificación</th>
+              <th>Fecha de nacimiento</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in user.records.all %}
+              <tr>
+                <td>{{ record.name }}</td>
+                <td>{{ record.lastName }}</td>
+                <td>{{ record.email }}</td>
+                <td>{{ record.identification }}</td>
+                <td>{{ record.birthdate }}</td>
+                <td>
+                  <a href="{% url 'edit' record.id %}"  class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Editar</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p>No hay registros disponibles.</p>
+      {% endif %}
+    </div>
+
+    </div>
+
+
+  <!-- Mensajes-->
     {% if messages %}
       <ul class="messages">
         {% for message in messages %}
@@ -28,6 +70,65 @@
       </ul>
     {% endif %}
 
+
+
+  <!-- Modal para editar registro -->
+    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" >
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="staticBackdropLabel">Editar registro</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                  <form action="'employee_panel/{{recordEdit.id}}" method="post">
+                    {% csrf_token %}
+                    <div class="row mb-3">
+                      <label   class="clo-3 col-form-label">Nombre: </label>
+                      <div class="col-9">
+                        <input type="text" class="form-control" name="first" value="{{ recordEdit.name}}">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label  class="clo-3 col-form-label">Apellidos: </label>
+                      <div class="col-9">
+                        <input type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label  class="clo-3 col-form-label">Correo: </label>
+                      <div class="col-9">
+                        <input type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label  class="clo-3 col-form-label">Identificacion: </label>
+                      <div class="col-9">
+                        <input type="text" class="form-control">
+                      </div>
+                    </div>
+                    <div class="row mb-3">
+                      <label  class="clo-3 col-form-label">Fecha de nacimiento: </label>
+                      <div class="col-9">
+                        <input type="text" class="form-control">
+                      </div>
+                    </div>
+                  </form>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  <!-- Functions -->
      <script>
         function AcomodarBotones(){
             document.getElementById('CrearRegistro').style.display = 'none';
@@ -46,7 +147,9 @@
        }
        function regresar() {
            window.location.href = '/employee_panel';
-    }
+       }
+
+
 
      </script>
 
