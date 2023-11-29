@@ -47,7 +47,7 @@
                 <td>{{ record.identification }}</td>
                 <td>{{ record.birthdate }}</td>
                 <td>
-                  <a href="{% url 'edit' record.id %}"  class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Editar</a>
+                  <a href="{% url 'editBeneficiary' record.id %}"  class="btn btn-sm btn-warning btn-edit" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Editar</a>
                 </td>
               </tr>
             {% endfor %}
